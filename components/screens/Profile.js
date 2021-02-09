@@ -1,6 +1,7 @@
 import React from 'react'
-import { View, Text, FlatList } from 'react-native';
-
+import { View, Text, FlatList,Button } from 'react-native';
+import firebase from 'firebase'
+require('firebase/firestore')
 import { connect } from 'react-redux';
 
 
@@ -10,8 +11,16 @@ const Profile = (props) => {
     return (
         <View>
             <Text>Profile</Text>
+            <Button
+                title="Logout"
+                onPress={() => onLogout()}
+            />
         </View>
     )
+}
+
+const onLogout = () => {
+    firebase.auth().signOut();
 }
 
 const mapStateToProps = (store) => ({
