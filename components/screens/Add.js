@@ -5,8 +5,11 @@ import { TextInput } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchUser, fetchData } from '../../redux/actions/index';
+
 import { WORKOUTS } from '../constants/workouts';
 import DataTable from '../functional_components/DataTable';
+import DataChart from '../functional_components/DataChart';
+
 import { Ionicons } from '@expo/vector-icons'; 
 
 import firebase from 'firebase';
@@ -93,7 +96,7 @@ const Add = (props) => {
                 </View>
                 <Text>Add a {workout} workout</Text>
                 <TextInput
-                    style = {{height: 40}}
+                    style = {{height: 40, marginBottom: "2%"}}
                     label = "Weight"
                     value = {weight}
                     onChangeText = {(weight) => setWeight(weight)}
@@ -101,7 +104,7 @@ const Add = (props) => {
                     mode = 'outlined'
                 />
                 <TextInput
-                    style = {{height: 40}}
+                    style = {{height: 40, marginBottom: "5%"}}
                     label = "Repitions"
                     value = {reps}
                     onChangeText = {(reps) => setReps(reps)}
@@ -115,6 +118,7 @@ const Add = (props) => {
                         retrieveData(workout)
                     }}
                 />
+                <DataChart workoutData = {myData}/>
                 <DataTable data = {myData}/>
             </View>
         )

@@ -4,7 +4,7 @@ import { View, Text, FlatList, StyleSheet} from 'react-native';
 const DataTable = ({data}) => {
     const colors = ['#FFF8E5', '#FFFFFF']
     return(
-        <View style = {{flex: 1}}>
+        <View style = {{flex: 1, marginBottom: '5%'}}>
             <View style = {styles.data_table_container}>
                 <View style = {{flexDirection: 'row'}}>
                     <View style = {{width: '55%'}}>
