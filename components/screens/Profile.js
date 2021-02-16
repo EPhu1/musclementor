@@ -13,14 +13,10 @@ const Profile = (props) => {
             <Text>Profile</Text>
             <Button
                 title="Logout"
-                onPress={() => onLogout()}
+                onPress={() => firebase.auth().signOut()}
             />
         </View>
     )
-}
-
-const onLogout = () => {
-    firebase.auth().signOut();
 }
 
 const mapStateToProps = (store) => ({

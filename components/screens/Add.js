@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { View, Text, Button, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, Button, FlatList, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import { TextInput } from 'react-native-paper';
 
 import { connect } from 'react-redux';
@@ -59,19 +59,23 @@ const Add = (props) => {
         return(
             <View style = {styles.root}>
                 <FlatList
-                    numColumns = {2}
+                    numColumns = {3}
                     horizontal = {false}
                     data = {WORKOUTS}
                     keyExtractor = {(item) => item.id}
                     renderItem = {({item}) => (
-                        <Button
-                            title = {item.name}
+                        <TouchableOpacity
                             onPress = {() => {
                                 retrieveData(item.name);
                                 setWorkout(item.name);
                                 setScreen('addworkout');
                             }}
-                        />
+                            >
+                            <Image 
+                                style = {styles.imgs}
+                                source={item.url} 
+                            />
+                        </TouchableOpacity>
                     )}
                 />
             </View>
@@ -130,6 +134,15 @@ const styles = StyleSheet.create({
         flex: 1,
         marginHorizontal: '2%',
         marginTop: '10%'
+    },
+    imgs: {
+        borderWidth: 2,
+        borderRadius: 15,
+        padding: 50,
+        borderColor: 'black',
+        width:100, height:100,
+        marginHorizontal: '3.5%',
+        marginTop: '15%'
     }
 })
 
