@@ -1,4 +1,3 @@
-import React, {useState} from 'react'
 import { View, TextInput, Text, Button, FlatList} from 'react-native';
 
 import { connect } from 'react-redux';
@@ -42,23 +41,84 @@ const Add = (props) => {
             <TextInput
                 placeholder = "repitions"
                 onChangeText = {(reps) => setReps(reps)}
-            />
-            <Button
-                title = "save"
-                onPress = {() => saveData(weight, reps)}
-            />
-            <FlatList
-                data = {myData}
-                renderItem = {({item}) => (
-                    <Text>
-                        {item.weight} x {item.reps} lbs, date: {item.timestamp.toDate().toLocaleDateString()}
-                    </Text>
-                )}
-            />
-        </View>
-    )
+    if(screen == 'selectworkout'){
+        return(
+            <View style = {styles.root}>
+                <FlatList
+                    numColumns = {3}
+                    horizontal = {false}
+                    data = {WORKOUTS}
+                    keyExtractor = {(item) => item.id}
+                    renderItem = {({item}) => (
+                        <TouchableOpacity
+                            onPress = {() => {
+                                retrieveData(item.name);
+                                setWorkout(item.name);
+                                setScreen('addworkout');
+                            }}
+                            >
+                            <Image 
+                            style = {styles.imgs}
+                            source={require('./lift-pictures/' + item.id.toString() + '.PNG')} 
+                            // source={require('./lift-pictures/3.PNG')}
+                        
+                            />
+                        </TouchableOpacity>
+                    )}
+                />
+            </View>
+        )
+    }
+    else if(screen == "addworkout"){
+        return (
+            <View style = {styles.root}>
+                <View style = {{flexDirection: 'row'}}>
+                    <TouchableOpacity
+                        onPress = {() => setScreen("selectworkout")}
+                        style = {{width: '5%'}}
+                    >
+                        <Ionicons name="arrow-back-outline" size={24} color="black" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress = {() => console.log('settings')}
+                        style = {{marginLeft: '88%'}}
+                    >
+                        <Ionicons name="ios-settings-outline" size={24} color="black" />
+                    </TouchableOpacity>
+                </View>
+                <Text>Add a {workout} workout</Text>
+                <TextInput
+                    style = {{height: 40}}
+                    label = "Weight"
+                    value = {weight}
+                    onChangeText = {(weight) => setWeight(weight)}
+                    theme = {{colors: {primary: "#006aff"}}}
+                    mode = 'outlined'
+                />
+                <TextInput
+                    style = {{height: 40}}
+                    label = "Repitions"
+                    value = {reps}
+                    onChangeText = {(reps) => setReps(reps)}
+                    theme = {{colors: {primary: "#006aff"}}}
+                    mode = 'outlined'
+                />
+                <Button
+                    title = "save"
+                    onPress = {() => {
+                        saveData(weight, reps, workout)
+                        retrieveData(workout)
+                    }}
+                />
+                <DataTable data = {myData}/>
+            </View>
+        )
 }
 
+const styles = StyleSheet.create({
+    root: {
+        flex: 1,
+        marginHorizontal: '2%',
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     data: store.userState.data
