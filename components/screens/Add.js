@@ -1,22 +1,23 @@
-import { View, TextInput, Text, Button, FlatList} from 'react-native';
+import React, {useState, useEffect} from 'react'
+import { View, Text, Button, FlatList, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import { TextInput } from 'react-native-paper';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchUser, fetchData } from '../../redux/actions/index';
+import { WORKOUTS } from '../constants/workouts';
 
 import firebase from 'firebase';
 require("firebase/firestore")
 
-const Add = (props) => {
-    const [weight, setWeight] = useState("")
-    const [reps, setReps] = useState("")
 
-    const [x, repError] = useState("")
-
-    const { currentUser, data } = props; //uses redux to get currentUser and data information
-
-    const [myData, setMyData] = useState(data); //temporary fix to show the data immediately after saving
-    console.log(myData)
+const Add = () => {
+    // const { currentUser, data } = props; //uses redux to get currentUser and data information
+    const [myData, setMyData] = useState([]); //data collection from firebase
+    const [weight, setWeight] = useState(""); //keeps track of user inputted weight
+    const [reps, setReps] = useState(""); //keeps track of user inputted reps
+    const [screen, setScreen] = useState("selectworkout");
+    const [workout, setWorkout] = useState("");
 
     const saveData = (weight, reps) => {
         setMyData([...myData, {id: (Math.random()*10000).toString(), weight: weight, reps: reps}]) //temporary fix
@@ -31,16 +32,6 @@ const Add = (props) => {
             })
     }
 
-    return (
-        <View style = {{flex: 1}}>
-            <Text>Add Benchpress Workout</Text>
-            <TextInput
-                placeholder = "weight"
-                onChangeText = {(weight) => setWeight(weight)}
-            />
-            <TextInput
-                placeholder = "repitions"
-                onChangeText = {(reps) => setReps(reps)}
     if(screen == 'selectworkout'){
         return(
             <View style = {styles.root}>
@@ -113,12 +104,26 @@ const Add = (props) => {
                 <DataTable data = {myData}/>
             </View>
         )
+    }
 }
 
 const styles = StyleSheet.create({
     root: {
         flex: 1,
         marginHorizontal: '2%',
+        marginTop: '10%'
+    },
+    imgs: {
+        borderWidth: 5,
+        borderRadius: 15,
+        padding: 50,
+        borderColor: 'transparent',
+        // width:100, height:100,
+        marginHorizontal: '2%',
+        marginTop: '10%'
+    }
+})
+
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     data: store.userState.data
