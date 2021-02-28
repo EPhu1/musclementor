@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchUser, fetchData } from '../../redux/actions/index';
 
-import { WORKOUTS } from '../constants/workouts';
+import { WORKOUTS, WORKOUT_GROUPS } from '../constants/workouts';
 import DataTable from '../functional_components/DataTable';
 import DataChart from '../functional_components/DataChart';
 
@@ -33,7 +33,8 @@ const Add = (props) => {
             .add({
                 weight,
                 reps,
-                timestamp: milliseconds
+                timestamp: milliseconds,
+                group: WORKOUT_GROUPS[workoutName]
             })
     }
 
