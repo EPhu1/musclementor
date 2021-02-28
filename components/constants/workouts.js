@@ -6,3 +6,12 @@ export const WORKOUTS = [   {name: 'benchpress', id: 1, url: require('../../asse
                             {name: 'dip', id: 6, url: require('../../assets/workouts/6.png')},
                             {name: 'military press', id: 7, url: require('../../assets/workouts/7.png')},
                         ]
+
+export const WORKOUT_GROUPS = { 'benchpress': 'chest',
+                                'deadlift': 'back',
+                                'squat': 'legs',
+                                'chin-up': 'back',
+                                'pull-up': 'back',
+                                'dip': 'chest',
+                                'military press': 'chest' //shoulders???
+                              }
