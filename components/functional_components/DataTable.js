@@ -22,7 +22,7 @@ const DataTable = ({data}) => {
                     renderItem = {({item, index}) => (
                         <View style = {[styles.data_table_entry, {backgroundColor: colors[index % colors.length]}]}>
                             <View style = {{width: '55%'}}>
-                                <Text>{(new Date(item.timestamp)).toLocaleString()}</Text>
+                                <Text>{(new Date(item.timestamp)).toDateString()}</Text>
                             </View>
                             <View style = {{width: '25%'}}>
                                 <Text>{item.weight}</Text>

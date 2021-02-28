@@ -4,7 +4,7 @@ import { LineChart } from "react-native-chart-kit";
 import { WathanRPMFormula } from "../functions/calculations";
 
 const DataChart = ({workoutData}) => {
-    if(workoutData.length == 0 || workoutData.length == 1){
+    if(workoutData.length < 2){
         return (
             <View>
                 <Text>Enter atleast two workouts to view One Rep Max data.</Text>
@@ -26,7 +26,7 @@ const DataChart = ({workoutData}) => {
                 let month = (new Date(workoutData[i].timestamp)).getMonth() + 1; //months from 1-12
                 let day = (new Date(workoutData[i].timestamp)).getDate();
                 let year = (new Date(workoutData[i].timestamp)).getFullYear();
-                oneRM_list.push(WathanRPMFormula(workoutData[i].weight, workoutData[i].reps));
+                oneRM_list.push(parseInt(WathanRPMFormula(workoutData[i].weight, workoutData[i].reps)));
                 dates_list.push(month + "/" + day + "/" + year%2000);
             }
             setOneRM_Week(oneRM_list);
@@ -50,7 +50,7 @@ const DataChart = ({workoutData}) => {
             initializeData();
             findMaximum1RM();
         }, [workoutData])
-    
+
         const chartConfig = {
             backgroundGradientFrom: "#193088",
             backgroundGradientFromOpacity: 1,
