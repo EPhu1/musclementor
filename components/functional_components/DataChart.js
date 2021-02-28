@@ -4,10 +4,10 @@ import { LineChart } from "react-native-chart-kit";
 import { WathanRPMFormula } from "../functions/calculations";
 
 const DataChart = ({workoutData}) => {
-    if(workoutData.length == 0 || workoutData.length == 1){
+    if(workoutData.length <= 2){
         return (
             <View>
-                <Text>Enter atleast two workouts to view One Rep Max data.</Text>
+                <Text>Enter at least three workouts to view One Rep Max data.</Text>
             </View>
         )
     }
@@ -26,8 +26,9 @@ const DataChart = ({workoutData}) => {
                 let month = (new Date(workoutData[i].timestamp)).getMonth() + 1; //months from 1-12
                 let day = (new Date(workoutData[i].timestamp)).getDate();
                 let year = (new Date(workoutData[i].timestamp)).getFullYear();
-                oneRM_list.push(WathanRPMFormula(workoutData[i].weight, workoutData[i].reps));
-                dates_list.push(month + "/" + day + "/" + year%2000);
+                oneRM_list.push(parseInt(WathanRPMFormula(workoutData[i].weight, workoutData[i].reps)));
+                dates_list.push((month + "/" + day + "/" + parseInt(year)%2000).toString());
+
             }
             setOneRM_Week(oneRM_list);
             setDates(dates_list);
