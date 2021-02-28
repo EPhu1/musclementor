@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, Button, TextInput } from 'react-native'
 import firebase from 'firebase'
 
-export default class Login extends Component {
+export class Login extends Component {
     constructor(props){
         super(props);
 
@@ -11,17 +11,18 @@ export default class Login extends Component {
             password: '',
         }
 
-        this.onSignUp = this.onSignUp.bind(this)
+        this.onSignIn = this.onSignIn.bind(this)
     }
 
     onSignIn(){
-        const { email, password, name } = this.state;
+        const { email, password } = this.state;
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then((result) => {
             console.log(result)
         })
         .catch((error) => {
             console.log(error)
+            alert(error)
         })
     }
 
@@ -45,3 +46,5 @@ export default class Login extends Component {
         )
     }
 }
+
+export default Login;
