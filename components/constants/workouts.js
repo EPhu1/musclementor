@@ -13,5 +13,5 @@ export const WORKOUT_GROUPS = { 'benchpress': 'chest',
                                 'chin-up': 'back',
                                 'pull-up': 'back',
                                 'dip': 'chest',
-                                'military press': 'chest' //shoulders???
+                                'military press': 'chest' 
                               }
