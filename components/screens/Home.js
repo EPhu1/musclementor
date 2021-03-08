@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet, Button, FlatList} from 'react-native';
-import { WORKOUTS } from '../constants/workouts';
+import { WORKOUTS, WORKOUT_RATIOS_MALE} from '../constants/workouts';
 
 import firebase from 'firebase';
 require("firebase/firestore")
@@ -46,20 +46,20 @@ function Home() {
 
     useEffect(() => {
         let temp = []
-        retrieveUserWeight();
         Promise.all([retrieveData('benchpress'), retrieveData('deadlift'), retrieveData('squat'), retrieveData('chin-up'), retrieveData('pull-up'),
                      retrieveData('dip'), retrieveData('military press')]).then((values) => {
             values.forEach((data, i) => {
                 let sum = 0;
                 data.forEach((datum) => {
-                    sum += parseInt(datum.weight) / data.length / 350; //still need to make a real formula and replace 300 with userWeight
-                    // sum += parseInt(datum.weight) / data.length / userWeight; //still need to make a real formula
+                    sum += parseInt(datum.weight); 
                 })
+                const workoutRatio = WORKOUT_RATIOS_MALE[WORKOUTS[i].name];
+                const score = (sum / data.length) / (150 * workoutRatio); //need to replace 150 with userWeight
                 if(sum >= 1){
                     sum = 1;
                 }
                 if(sum > 0){
-                    temp.push({name: WORKOUTS[i].name, score: sum});
+                    temp.push({name: WORKOUTS[i].name, score: score});
                 }
                 temp.sort((a, b) => (a.score > b.score) ? -1 : 1) //sort object by the descending order of sum
 

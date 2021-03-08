@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchUser, fetchData } from '../../redux/actions/index';
 
-import { WORKOUTS, WORKOUT_GROUPS } from '../constants/workouts';
+import { WORKOUTS, WORKOUT_GROUPS, WORKOUT_RATIOS_MALE } from '../constants/workouts';
 import DataTable from '../functional_components/DataTable';
 import DataChart from '../functional_components/DataChart';
 
@@ -23,6 +23,8 @@ const Add = (props) => {
     const [reps, setReps] = useState(""); //keeps track of user inputted reps
     const [screen, setScreen] = useState("selectworkout");
     const [workout, setWorkout] = useState("");
+
+    const [workoutScores, setWorkoutScores] = useState([]); //an array of every workout name and corresponding score.
 
     const saveData = (weight, reps, workoutName) => {
         let milliseconds = Date.now();
@@ -56,6 +58,44 @@ const Add = (props) => {
             })
     }
 
+    const retrieveData2 = async (workoutName) =>{ //currently using this to read and store all the data from firebase into workoutScores
+        let x = await firebase.firestore()
+            .collection("data")
+            .doc(firebase.auth().currentUser.uid)
+            .collection(workoutName)             
+            .orderBy("timestamp", "desc")         
+            .get()
+            .then((snapshot) => {
+                let data = snapshot.docs.map(doc => {
+                    const x = doc.data();
+                    const id = doc.id;
+                    return {id, ...x}
+                })
+                return data;
+            })
+        return x
+    }
+
+    useEffect(() => { //sets information into workoutScores which is used for the recommendation system.
+        let temp = []
+        Promise.all([retrieveData2('benchpress'), retrieveData2('deadlift'), retrieveData2('squat'), retrieveData2('chin-up'), 
+                     retrieveData2('pull-up'), retrieveData2('dip'), retrieveData2('military press')]).then((values) => {
+            values.forEach((data, i) => { // every workout type; benchpress, deadlift, etc
+                let sum = 0;
+                data.forEach((datum) => { //every recorded workout session
+                    sum += parseInt(datum.weight);
+                })
+                const workoutRatio = WORKOUT_RATIOS_MALE[WORKOUTS[i].name];
+                const score = (sum / data.length) / workoutRatio;
+                temp.push({name: WORKOUTS[i].name, score: score });
+                temp.sort((a, b) => (a.score > b.score) ? 1 : -1) //sort object by the ascending order of score
+            })
+            setWorkoutScores(temp)
+        })
+    }, [myData])
+
+    console.log(workoutScores)
+
     if(screen == 'selectworkout'){
         return(
             <View style = {styles.root}>
@@ -73,7 +113,7 @@ const Add = (props) => {
                             }}
                             >
                             <Image 
-                                style = {styles.imgs}
+                                style = {workoutScores.length == 0 ? styles.imgs : (item.name == workoutScores[0].name ? [styles.imgs, {borderColor: 'green'}]: styles.imgs)}
                                 source={item.url} 
                             />
                         </TouchableOpacity>
