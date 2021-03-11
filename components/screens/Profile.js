@@ -1,16 +1,37 @@
-import React from 'react'
-import { View, Text, FlatList,Button } from 'react-native';
+import React, {useState, useEffect} from 'react'
+import { View, Text, FlatList, Button} from 'react-native';
+
 import firebase from 'firebase'
 require('firebase/firestore')
-import { connect } from 'react-redux';
 
 
-const Profile = (props) => {
-    const { currentUser, data } = props;
-    console.log({currentUser, data})
+const Profile = () => {
+    const [userInfo, setUserInfo] = useState(0);
+
+    const retrieveUserWeight = () => {
+        firebase.firestore()
+            .collection("users")
+            .doc(firebase.auth().currentUser.uid)      
+            .get()
+            .then((snapshot) => {
+                if(snapshot.exists){
+                    setUserInfo(snapshot.data())
+                }
+                else{
+                    console.log('user info does not exist')
+                }
+            })
+    }
+
+    useEffect(() => {
+        retrieveUserWeight()
+    }, [])
+
     return (
-        <View>
-            <Text>Profile</Text>
+        <View style = {{flex: 1, marginHorizontal: '2%', marginTop: '10%'}}>
+            <Text>Name: {userInfo.name}</Text>
+            <Text>Email: {userInfo.email}</Text>
+            <Text>Weight: {userInfo.weight} lbs</Text>
             <Button
                 title="Logout"
                 onPress={() => firebase.auth().signOut()}
@@ -19,9 +40,5 @@ const Profile = (props) => {
     )
 }
 
-const mapStateToProps = (store) => ({
-    currentUser: store.userState.currentUser,
-    data: store.userState.data
-})
 
-export default connect(mapStateToProps, null)(Profile)
+export default Profile;

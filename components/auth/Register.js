@@ -3,24 +3,21 @@ import { View, Button, TextInput } from 'react-native'
 import firebase from 'firebase'
 
 export default class Register extends Component {
-
-    // const [x, repError] = useState("")
-
-
     constructor(props){
         super(props);
 
         this.state = {
             email: '',
             password: '',
-            name: ''
+            name: '',
+            weight: ''
         }
 
         this.onSignUp = this.onSignUp.bind(this)
     }
 
     onSignUp(){
-        const { email, password, name } = this.state;
+        const { email, password, name, weight} = this.state;
         firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((result) => {
             //STORING ONTO FIRESTORE (1:02:14 timestamp)
@@ -29,7 +26,8 @@ export default class Register extends Component {
             .set({
                 //saves name and email
                 name,
-                email
+                email,
+                weight
             })
             console.log(result)
         })
@@ -47,6 +45,10 @@ export default class Register extends Component {
                     onChangeText = {(name) => this.setState({name})}
                 />
                 <TextInput
+                    placeholder = "weight (lbs)"
+                    onChangeText = {(weight) => this.setState({weight})}
+                />
+                <TextInput
                     placeholder = "email"
                     onChangeText = {(email) => this.setState({email})}
                 />
@@ -55,6 +57,7 @@ export default class Register extends Component {
                     secureTextEntry = {true}
                     onChangeText = {(password) => this.setState({password})}
                 />
+                
                 <Button
                     title = "Sign Up"
                     onPress = {() => this.onSignUp()}
