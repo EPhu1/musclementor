@@ -6,6 +6,11 @@ export const WORKOUTS = [   {name: 'benchpress', id: 1, url: require('../../asse
                             {name: 'pull-up', id: 5, url: require('../../assets/workouts/5.png')},
                             {name: 'dip', id: 6, url: require('../../assets/workouts/6.png')},
                             {name: 'military press', id: 7, url: require('../../assets/workouts/7.png')},
+                            {name: 'pushup', id: 8, url: require('../../assets/workouts/8.jpg')},
+                            {name: 'lat pulldown', id: 9, url: require('../../assets/workouts/9.jpg')},
+                            {name: 'dumbbell lunge', id: 10, url: require('../../assets/workouts/10.jpg')},
+                            {name: 'hip thrust', id: 11, url: require('../../assets/workouts/11.jpg')},
+                            {name: 'dumbbell benchpress', id: 12, url: require('../../assets/workouts/12.jpg')},
                         ]
 
 export const WORKOUT_GROUPS = { 'benchpress': 'chest',
@@ -14,7 +19,12 @@ export const WORKOUT_GROUPS = { 'benchpress': 'chest',
                                 'chin-up': 'back',
                                 'pull-up': 'back',
                                 'dip': 'chest',
-                                'military press': 'chest' 
+                                'military press': 'chest',
+                                'pushup': 'chest',
+                                'lat pulldown': 'back',
+                                'dumbbell lunge': 'leg',
+                                'hip thrust': 'leg',
+                                'dumbbell benchpress': 'back',
                               }
 
 //These numbers are taken from here: https://strengthlevel.com/strength-standards/bench-press/lb
@@ -22,8 +32,13 @@ export const WORKOUT_GROUPS = { 'benchpress': 'chest',
 export const WORKOUT_RATIOS_MALE = { 'benchpress': 1.2,
                                      'deadlift': 1.89,
                                      'squat': 1.59,
-                                     'chin-up': 1.0, //This needs to be changed. Ratio is different from usual
-                                     'pull-up': 1.0, //This needs to be changed. Ratio is different from usual
-                                     'dip': 1.0, //This needs to be changed. Ratio is different from usual
-                                     'military press': 0.78 
+                                     'chin-up': 0.13, //This needs to be changed. Ratio is different from usual
+                                     'pull-up': 0.13, //This needs to be changed. Ratio is different from usual
+                                     'dip': 0.13, //This needs to be changed. Ratio is different from usual
+                                     'military press': 0.78,
+                                     'pushup': 0.22,
+                                     'lat pulldown': 1.1,
+                                     'dumbbell lunge': 0.4,
+                                     'hip thrust': 1.63,
+                                     'dumbbell benchpress': 0.5,
                                    }

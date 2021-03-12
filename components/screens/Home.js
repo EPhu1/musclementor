@@ -46,8 +46,10 @@ function Home() {
 
     useEffect(() => {
         let temp = []
-        Promise.all([retrieveData('benchpress'), retrieveData('deadlift'), retrieveData('squat'), retrieveData('chin-up'), retrieveData('pull-up'),
-                     retrieveData('dip'), retrieveData('military press')]).then((values) => {
+        Promise.all([retrieveData('benchpress'), retrieveData('deadlift'), retrieveData('squat'), retrieveData('chin-up'), 
+                     retrieveData('pull-up'), retrieveData('dip'), retrieveData('military press'), retrieveData('pushup')
+                     , retrieveData('lat pulldown'), retrieveData('dumbbell lunge'), retrieveData('hip thrust'),
+                      retrieveData('dumbbell benchpress')]).then((values) => {
             values.forEach((data, i) => {
                 let sum = 0;
                 data.forEach((datum) => {
@@ -83,7 +85,8 @@ function Home() {
                             {item.name}
                         </Text>
                         <View style = {[styles.bar, {backgroundColor: (item.score > .33 ? (item.score > .67 ? darkColors.green : darkColors.yellow) : darkColors.red)}]}>
-                            <View style = {{borderRadius: 7, width: (((item.score * 100).toFixed(2)).toString() + "%"), height: '100%', backgroundColor: (item.score > .33 ? (item.score > .67 ? lightColors.green : lightColors.yellow) : lightColors.red)}}>
+                            <View style = {{borderRadius: 7, width: (((item.score * 100).toFixed(2)).toString() + "%"), 
+                            height: '100%', backgroundColor: (item.score > .33 ? (item.score > .67 ? lightColors.green : lightColors.yellow) : lightColors.red)}}>
                                 {item.score > 0.15? 
                                     <Text>
                                         {item.score > 0.33 ?

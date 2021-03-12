@@ -79,7 +79,9 @@ const Add = (props) => {
     useEffect(() => { //sets information into workoutScores which is used for the recommendation system.
         let temp = []
         Promise.all([retrieveData2('benchpress'), retrieveData2('deadlift'), retrieveData2('squat'), retrieveData2('chin-up'), 
-                     retrieveData2('pull-up'), retrieveData2('dip'), retrieveData2('military press')]).then((values) => {
+                     retrieveData2('pull-up'), retrieveData2('dip'), retrieveData2('military press'), retrieveData2('pushup')
+                     , retrieveData2('lat pulldown'), retrieveData2('dumbbell lunge'), retrieveData2('hip thrust'),
+                      retrieveData2('dumbbell benchpress')]).then((values) => {
             values.forEach((data, i) => { // every workout type; benchpress, deadlift, etc
                 let sum = 0;
                 data.forEach((datum) => { //every recorded workout session
@@ -113,7 +115,8 @@ const Add = (props) => {
                             }}
                             >
                             <Image 
-                                style = {workoutScores.length == 0 ? styles.imgs : (item.name == workoutScores[0].name ? [styles.imgs, {borderColor: 'green'}]: styles.imgs)}
+                                style = {workoutScores.length == 0 ? styles.imgs : (item.name == workoutScores[0].name ? [styles.imgs, {borderColor: 'green',
+                                borderWidth: 4,}]: styles.imgs)}
                                 source={item.url} 
                             />
                         </TouchableOpacity>
@@ -177,13 +180,14 @@ const styles = StyleSheet.create({
         marginTop: '10%'
     },
     imgs: {
+        flex: 1,
         borderWidth: 2,
         borderRadius: 15,
         padding: 50,
         borderColor: 'black',
-        width:100, height:100,
-        marginHorizontal: '3.5%',
-        marginTop: '15%'
+        width:110, height:110,
+        marginHorizontal: '2.5%',
+        marginTop: '10%'
     }
 })
 
