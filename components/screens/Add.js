@@ -139,7 +139,7 @@ const Add = (props) => {
         return(
             <View style = {styles.root}>
                 <Text style = {styles.topText}>Add a Workout</Text>
-                <Text style = {styles.exerciseText}>Weakest lift from each muscle group is highlighted</Text>
+                <Text style = {styles.exerciseText}>Weakest lift from each muscle group are highlighted</Text>
                 <FlatList
                     numColumns = {3}
                     horizontal = {false}

@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet, Button, FlatList} from 'react-native';
 import { WORKOUTS, WORKOUT_RATIOS_MALE} from '../constants/workouts';
+import { WathanRPMFormula } from "../functions/calculations";
 
 import firebase from 'firebase';
 require("firebase/firestore")
@@ -46,12 +47,13 @@ function Home() {
     }
 
 
-    // const calculateScore = (sum, workoutRatio, data) => {
-    //     retrieveUserWeight();
-    //     console.log(userInfo.weight, "xd");
-    //     const score = (sum / data.length) / (userInfo.weight * workoutRatio); //need to replace 150 with userWeight
-    //     return score;
-    // }
+    const findMaximum1RM = (workoutData) => { //finds the maximum one rep max
+        let max = 0;
+        for(let i = 0; i < workoutData.length; i++){
+            max = (Math.max(max, WathanRPMFormula(workoutData[i].weight, workoutData[i].reps)));
+        }
+        return max;
+    }
 
     useEffect(() => {
         let temp = []
@@ -62,14 +64,11 @@ function Home() {
                      , retrieveData('lat pulldown'), retrieveData('dumbbell lunge'), retrieveData('hip thrust'),
                       retrieveData('dumbbell benchpress')]).then((values) => {
             values.forEach((data, i) => {
-                let sum = 0;
-                data.forEach((datum) => {
-                    sum += parseInt(datum.weight); 
-                })
-                // retrieveUserWeight();
-                // console.log(userInfo.weight)
+                let sum = findMaximum1RM(data);
+
                 const workoutRatio = WORKOUT_RATIOS_MALE[WORKOUTS[i].name];
-                const score = (sum / data.length) / (150 * workoutRatio); //need to replace 150 with userWeight
+                const score = sum / (workoutRatio*150); //your workout 1RM compared to the goal number
+                
                 if(sum >= 1){
                     sum = 1;
                 }
