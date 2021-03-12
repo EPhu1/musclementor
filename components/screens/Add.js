@@ -28,9 +28,6 @@ const Add = (props) => {
     const [workoutScores, setWorkoutScores] = useState([]); //an array of every workout name and corresponding score.
 
 
-    // const [highest1RM, setHighest1RM] = useState(0);
-
-
     const saveData = (weight, reps, workoutName) => {
         let milliseconds = Date.now();
         firebase.firestore()
@@ -82,13 +79,12 @@ const Add = (props) => {
     }
     
 
-    const findMaximum1RM = (workoutData) => { //finds the maximum one rep max and saves it to max1RM
+    const findMaximum1RM = (workoutData) => { //finds the maximum one rep max
         let max = 0;
         for(let i = 0; i < workoutData.length; i++){
             max = (Math.max(max, WathanRPMFormula(workoutData[i].weight, workoutData[i].reps)));
         }
         return max;
-        // setHighest1RM(max);
     }
 
     useEffect(() => { //sets information into workoutScores which is used for the recommendation system.
@@ -115,21 +111,22 @@ const Add = (props) => {
 
 
             for (var i = 0; i < temp.length; i++) {
-                if (WORKOUT_GROUPS[temp[i].name] == "chest" && chestExercise == ""){
+                if (WORKOUT_GROUPS[temp[i].name] == "chest" && chestExercise == "" && temp[i].score != 10){
                     chestExercise = temp[i];
                 }
-                if (WORKOUT_GROUPS[temp[i].name] == "back" && backExercise == ""){
+                if (WORKOUT_GROUPS[temp[i].name] == "back" && backExercise == "" && temp[i].score != 10){
                     backExercise = temp[i];
                 }
-                if (WORKOUT_GROUPS[temp[i].name] == "legs" && legsExercise == ""){
+                if (WORKOUT_GROUPS[temp[i].name] == "legs" && legsExercise == "" && temp[i].score != 10){
                     legsExercise = temp[i];
                 }
             }
 
             finalList.push(chestExercise, backExercise, legsExercise);  // Gets the lowest scoring exercise for each muscle group.
             setWorkoutScores(finalList);
-
+            
             console.log(workoutScores)
+            console.log(temp)
         })
     }, [myData])
 

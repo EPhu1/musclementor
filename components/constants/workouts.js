@@ -22,8 +22,8 @@ export const WORKOUT_GROUPS = { 'benchpress': 'chest',
                                 'military press': 'chest',
                                 'pushup': 'chest',
                                 'lat pulldown': 'back',
-                                'dumbbell lunge': 'leg',
-                                'hip thrust': 'leg',
+                                'dumbbell lunge': 'legs',
+                                'hip thrust': 'legs',
                                 'dumbbell benchpress': 'back',
                               }
 
