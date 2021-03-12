@@ -32,11 +32,11 @@ export const WORKOUT_GROUPS = { 'benchpress': 'chest',
 export const WORKOUT_RATIOS_MALE = { 'benchpress': 1.2,
                                      'deadlift': 1.89,
                                      'squat': 1.59,
-                                     'chin-up': 0.13, //This needs to be changed. Ratio is different from usual
-                                     'pull-up': 0.13, //This needs to be changed. Ratio is different from usual
-                                     'dip': 0.13, //This needs to be changed. Ratio is different from usual
+                                     'chin-up': 1.5,
+                                     'pull-up': 1.5,
+                                     'dip': 1.63,
                                      'military press': 0.78,
-                                     'pushup': 0.22,
+                                     'pushup': 2.34,
                                      'lat pulldown': 1.1,
                                      'dumbbell lunge': 0.4,
                                      'hip thrust': 1.63,

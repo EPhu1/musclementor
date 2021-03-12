@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { View, Text, Button, FlatList, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import { TextInput } from 'react-native-paper';
+import { WathanRPMFormula } from "../functions/calculations";
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -27,7 +28,8 @@ const Add = (props) => {
     const [workoutScores, setWorkoutScores] = useState([]); //an array of every workout name and corresponding score.
 
 
-    // const [highest1RM, setHighest1RM] = useState(["", ""]) // an array of length 2 containing the highest 1RM of all time and the date
+    // const [highest1RM, setHighest1RM] = useState(0);
+
 
     const saveData = (weight, reps, workoutName) => {
         let milliseconds = Date.now();
@@ -80,46 +82,64 @@ const Add = (props) => {
     }
     
 
-    // const findMaximum1RM = () => { //finds the maximum one rep max and saves it to max1RM
-    //     let max = 0;
-    //     let maxSeconds = 0;
-    //     for(let i = 0; i < workoutData.length; i++){
-    //         max = (Math.max(max, WathanRPMFormula(workoutData[i].weight, workoutData[i].reps)));
-    //         maxSeconds = workoutData[i].timestamp;
-    //     }
-    //     let month = (new Date(maxSeconds)).getMonth() + 1; //months from 1-12
-    //     let day = (new Date(maxSeconds)).getDate();
-    //     let year = (new Date(maxSeconds)).getFullYear();
-    //     setHighest1RM([max, month + "/" + day + "/" + year]);
-    // }
+    const findMaximum1RM = (workoutData) => { //finds the maximum one rep max and saves it to max1RM
+        let max = 0;
+        for(let i = 0; i < workoutData.length; i++){
+            max = (Math.max(max, WathanRPMFormula(workoutData[i].weight, workoutData[i].reps)));
+        }
+        return max;
+        // setHighest1RM(max);
+    }
 
     useEffect(() => { //sets information into workoutScores which is used for the recommendation system.
-        let temp = []
+        let temp = [];
+        let finalList = [];
+        let chestExercise = "";
+        let backExercise = "";
+        let legsExercise = "";
+
         Promise.all([retrieveData2('benchpress'), retrieveData2('deadlift'), retrieveData2('squat'), retrieveData2('chin-up'), 
                      retrieveData2('pull-up'), retrieveData2('dip'), retrieveData2('military press'), retrieveData2('pushup')
                      , retrieveData2('lat pulldown'), retrieveData2('dumbbell lunge'), retrieveData2('hip thrust'),
                       retrieveData2('dumbbell benchpress')]).then((values) => {
             values.forEach((data, i) => { // every workout type; benchpress, deadlift, etc
-                let sum = 0;
-                data.forEach((datum) => { //every recorded workout session
-                    sum += parseInt(datum.weight);
-                })
-                console.log(sum)
+                // let sum = 0;
+                let sum = findMaximum1RM(data);
+
                 const workoutRatio = WORKOUT_RATIOS_MALE[WORKOUTS[i].name];
-                const score = (sum / data.length) / workoutRatio;
-                isNaN(score) ? temp.push({name: WORKOUTS[i].name, score: 0 }) : temp.push({name: WORKOUTS[i].name, score: score }); //If no score, score == 0. Else, places score.
+                const score = sum / (workoutRatio*150); //your workout 1RM compared to the goal number
+                score === 0 ? temp.push({name: WORKOUTS[i].name, score: 10 }) : temp.push({name: WORKOUTS[i].name, score: score }); //If no score, score == 10. Else, places score.
+                                                                                     //This is so that it only recommends workouts the user has done. (score is typically 0 - 1.5)
                 temp.sort((a, b) => (a.score > b.score) ? 1 : -1) //sort object by the ascending order of score
             })
-            setWorkoutScores(temp)
+
+
+            for (var i = 0; i < temp.length; i++) {
+                if (WORKOUT_GROUPS[temp[i].name] == "chest" && chestExercise == ""){
+                    chestExercise = temp[i];
+                }
+                if (WORKOUT_GROUPS[temp[i].name] == "back" && backExercise == ""){
+                    backExercise = temp[i];
+                }
+                if (WORKOUT_GROUPS[temp[i].name] == "legs" && legsExercise == ""){
+                    legsExercise = temp[i];
+                }
+            }
+
+            finalList.push(chestExercise, backExercise, legsExercise);  // Gets the lowest scoring exercise for each muscle group.
+            setWorkoutScores(finalList);
+
+            console.log(workoutScores)
         })
     }, [myData])
 
-    console.log(workoutScores)
+    // console.log(workoutScores)
 
     if(screen == 'selectworkout'){
         return(
             <View style = {styles.root}>
                 <Text style = {styles.topText}>Add a Workout</Text>
+                <Text style = {styles.exerciseText}>Weakest lift from each muscle group is highlighted</Text>
                 <FlatList
                     numColumns = {3}
                     horizontal = {false}
@@ -216,6 +236,14 @@ const styles = StyleSheet.create({
         marginBottom: '2%', 
         marginTop: '3%', 
         fontWeight: 'bold'
+    },
+
+    exerciseText: {
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 15, 
+        marginBottom: '2%', 
+        marginTop: '3%', 
     },
 
     firstPriority: {
