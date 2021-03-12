@@ -7,7 +7,7 @@ require("firebase/firestore")
 
 function Home() {
     const [allData, setAllData] = useState([]); //every workout so far stored as a dictionary of arrays.
-    const [userWeight, setUserWeight] = useState(0);
+    const [userInfo, setUserInfo] = useState(0);
     const lightColors = {green: "#80dfbc", yellow: '#f5f09a', red: '#fda08e'};
     const darkColors = {green: "#c0efde", yellow: '#faf8cd', red: '#fecfc6'};
 
@@ -18,7 +18,8 @@ function Home() {
             .get()
             .then((snapshot) => {
                 if(snapshot.exists){
-                    setUserWeight(snapshot.data().weight)
+                    setUserInfo(snapshot.data())
+                    return snapshot.data()
                 }
                 else{
                     console.log('user info does not exist')
@@ -44,8 +45,18 @@ function Home() {
         return x
     }
 
+
+    // const calculateScore = (sum, workoutRatio, data) => {
+    //     retrieveUserWeight();
+    //     console.log(userInfo.weight, "xd");
+    //     const score = (sum / data.length) / (userInfo.weight * workoutRatio); //need to replace 150 with userWeight
+    //     return score;
+    // }
+
     useEffect(() => {
         let temp = []
+        retrieveUserWeight()
+        
         Promise.all([retrieveData('benchpress'), retrieveData('deadlift'), retrieveData('squat'), retrieveData('chin-up'), 
                      retrieveData('pull-up'), retrieveData('dip'), retrieveData('military press'), retrieveData('pushup')
                      , retrieveData('lat pulldown'), retrieveData('dumbbell lunge'), retrieveData('hip thrust'),
@@ -55,6 +66,8 @@ function Home() {
                 data.forEach((datum) => {
                     sum += parseInt(datum.weight); 
                 })
+                // retrieveUserWeight();
+                // console.log(userInfo.weight)
                 const workoutRatio = WORKOUT_RATIOS_MALE[WORKOUTS[i].name];
                 const score = (sum / data.length) / (150 * workoutRatio); //need to replace 150 with userWeight
                 if(sum >= 1){
@@ -73,19 +86,20 @@ function Home() {
 
     return (
         <View style = {styles.root}>
-            {/* <Button title = "test" onPress = {() => console.log(allData)}></Button> */}
-            <Text style = {{textAlign: 'center', fontSize: 18, marginBottom: '2%'}}>Strengths and Weaknesses</Text>
+            <Text style = {{textAlign: 'center', fontSize: 25, marginBottom: '2%', fontWeight: 'bold'}}>Strengths and Weaknesses</Text>
+            <Text style = {{textAlign: 'center', fontSize: 15, fontStyle: 'italic'}}>Recommended protein intake for muscle growth:</Text>
+            <Text style = {{textAlign: 'center', fontSize: 15, marginBottom: '5%', fontStyle: 'italic'}}>~{userInfo.weight*1.5} grams</Text>
             {allData.length == 0 ? <Text style = {{textAlign: 'center'}}>Enter a workout to view statistics</Text> : null}
             <FlatList
                 data = {allData}
                 keyExtractor = {(item) => item.name}
                 renderItem = {({item}) => (
                     <View style = {{flexDirection: 'row'}}>
-                        <Text style = {{width: 90}}>
+                        <Text style = {{width: 90, fontWeight: "bold"}}>
                             {item.name}
                         </Text>
                         <View style = {[styles.bar, {backgroundColor: (item.score > .33 ? (item.score > .67 ? darkColors.green : darkColors.yellow) : darkColors.red)}]}>
-                            <View style = {{borderRadius: 7, width: (((item.score * 100).toFixed(2)).toString() + "%"), 
+                            <View style = {{borderRadius: 5, width: (((item.score * 100).toFixed(2)).toString() + "%"), 
                             height: '100%', backgroundColor: (item.score > .33 ? (item.score > .67 ? lightColors.green : lightColors.yellow) : lightColors.red)}}>
                                 {item.score > 0.15? 
                                     <Text>
@@ -112,14 +126,15 @@ const styles = StyleSheet.create({
     root: {
         flex: 1,
         marginHorizontal: '2%',
-        marginTop: '10%'
+        marginTop: '10%',
     },
     bar: {
+        flex: 1,
         flexDirection: 'row',
         width: '75%',
         height: 25, 
-        marginBottom: 5,
-        borderRadius: 10, 
+        marginBottom: 15,
+        borderRadius: 5, 
         borderColor: 'gray', 
         borderWidth: 1.5,
     }
